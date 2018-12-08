@@ -36,6 +36,7 @@
 */
 
 #include <includes.h>
+#include "stm32f10x.h"
 
 
 /*
@@ -121,8 +122,8 @@ int  main (void)
                  (OS_ERR     *)&err);
 
     OSStart(&err);                                              /* Start multitasking (i.e. give control to uC/OS-III). */
-		
-		
+
+
 }
 
 
@@ -180,7 +181,7 @@ static  void  AppTaskStart (void *p_arg)
                  (void       *) 0,
                  (OS_OPT      )(OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR),
                  (OS_ERR     *)&err);
-								 
+
     OSTaskCreate((OS_TCB     *)&AppTaskAtProcessTCB,                /* Create the At Process task                                */
                  (CPU_CHAR   *)"App Task At Process",
                  (OS_TASK_PTR ) AppTaskAtProcess,
@@ -195,24 +196,24 @@ static  void  AppTaskStart (void *p_arg)
                  (OS_OPT      )(OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR),
                  (OS_ERR     *)&err);
 
-				 
-	  OSTaskCreate((OS_TCB	   *)&AppTaskLogTCB,				 /* Create the Log task								  */
-				         (CPU_CHAR   *)"App Log Process",
-				         (OS_TASK_PTR ) AppTaskLog,
-				         (void 	     *) 0,
-				         (OS_PRIO	    ) APP_TASK_LOG_PRIO,
-				         (CPU_STK	   *)&AppTaskLogStk[0],
-				         (CPU_STK_SIZE) APP_TASK_LOG_SIZE / 10,
-				         (CPU_STK_SIZE) APP_TASK_LOG_SIZE,
-				         (OS_MSG_QTY   ) 5u,
-                 (OS_TICK	     ) 0u,
-				         (void        *) 0,
-				         (OS_OPT	     )(OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR),
-				         (OS_ERR      *)&err);		 
-		
+
+    OSTaskCreate((OS_TCB    *)&AppTaskLogTCB,				 /* Create the Log task								  */
+                (CPU_CHAR   *)"App Log Process",
+                (OS_TASK_PTR ) AppTaskLog,
+                (void       *) 0,
+                (OS_PRIO     ) APP_TASK_LOG_PRIO,
+                (CPU_STK    *)&AppTaskLogStk[0],
+                (CPU_STK_SIZE) APP_TASK_LOG_SIZE / 10,
+                (CPU_STK_SIZE) APP_TASK_LOG_SIZE,
+                (OS_MSG_QTY  ) 5u,
+                (OS_TICK     ) 0u,
+                (void       *) 0,
+                (OS_OPT      )(OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR),
+                (OS_ERR     *)&err);
+
 	  OSTaskDel ( & AppTaskStartTCB, & err );
-		
-		
+
+
 }
 
 
@@ -224,18 +225,24 @@ static  void  AppTaskStart (void *p_arg)
 
 static  void  AppTaskAtParser ( void * p_arg )
 {
-    OS_ERR      err;
+	OS_ERR      err;
+if(0){
+
 
 
    (void)p_arg;
 
 
     while (DEF_TRUE) {                                          /* Task body, always written as an infinite loop.       */
-			macLED1_TOGGLE ();
 			OSTimeDly ( 1000, OS_OPT_TIME_DLY, & err );
     }
-		
-		
+}
+    while(1){
+
+    OSTimeDly ( 1000, OS_OPT_TIME_DLY, & err );
+        }
+
+
 }
 
 
@@ -247,18 +254,21 @@ static  void  AppTaskAtParser ( void * p_arg )
 
 static  void  AppTaskAtProcess ( void * p_arg )
 {
-    OS_ERR      err;
+	OS_ERR      err;
+    if(0){
 
 
    (void)p_arg;
 
 
     while (DEF_TRUE) {                                          /* Task body, always written as an infinite loop.       */
-			macLED2_TOGGLE ();
 			OSTimeDly ( 5000, OS_OPT_TIME_DLY, & err );
     }
-		
-		
+        }
+    while(1)
+        {
+        OSTimeDly ( 1000, OS_OPT_TIME_DLY, & err );
+}
 }
 
 
@@ -267,19 +277,16 @@ static  void  AppTaskAtProcess ( void * p_arg )
 *                                          LOG TASK
 *********************************************************************************************************
 */
-
 static  void  AppTaskLog  ( void * p_arg )
 {
-    OS_ERR      err;
+		OS_ERR      err;
+		(void)p_arg;
+		LED_Config();
+
+		while(DEF_TRUE){
+			LED_Toggle(GPIOC,GPIO_Pin_2);
+			LED_Toggle(GPIOC,GPIO_Pin_3);
+		}
 
 
-	(void)p_arg;
-
-
-	
-    while (1) {
-			OSTimeDly ( 5000, OS_OPT_TIME_DLY, & err );
-    }
-
-	
 }
