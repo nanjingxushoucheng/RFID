@@ -49,9 +49,9 @@
 
 #define  APP_TASK_START_PRIO                        2
 
-#define  APP_TASK_LED1_PRIO                         3
-#define  APP_TASK_LED2_PRIO                         3
-#define  APP_TASK_LED3_PRIO                         3
+#define  APP_TASK_AT_PARSER_PRIO                    3
+#define  APP_TASK_AT_PROCESS_PRIO                   3
+#define  APP_TASK_LOG_PRIO                          3
 
 
 /*
@@ -63,9 +63,11 @@
 
 #define  APP_TASK_START_STK_SIZE                    128
 
-#define  APP_TASK_LED1_STK_SIZE                     512
-#define  APP_TASK_LED2_STK_SIZE                     512
+#define  APP_TASK_AT_PARSER_STK_SIZE                512
+#define  APP_TASK_AT_PROCESS_STK_SIZE               512
 #define  APP_TASK_LED3_STK_SIZE                     512
+#define  APP_TASK_LOG_SIZE                          512
+
 
 
 /*
