@@ -37,6 +37,8 @@
 
 #include <includes.h>
 #include "stm32f10x.h"
+#include "./usart/bsp_usart.h"
+
 
 
 /*
@@ -225,24 +227,15 @@ static  void  AppTaskStart (void *p_arg)
 
 static  void  AppTaskAtParser ( void * p_arg )
 {
-	OS_ERR      err;
-if(0){
+    int i = 0;
+    char ch;
+    OS_ERR      err;
+    USART_Config();
 
-
-
-   (void)p_arg;
-
-
-    while (DEF_TRUE) {                                          /* Task body, always written as an infinite loop.       */
-			OSTimeDly ( 1000, OS_OPT_TIME_DLY, & err );
-    }
-}
     while(1){
-
-    OSTimeDly ( 1000, OS_OPT_TIME_DLY, & err );
-        }
-
-
+        ch=getchar();
+        printf("%c",ch);
+    }
 }
 
 
