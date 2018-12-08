@@ -1,53 +1,33 @@
-#include "bsp_led.h"   
+#include <includes.h>
+#include "bsp_led.h"
 
+ void LED_Config(void)
+ {
+	 		GPIO_InitTypeDef GPIO_InitStructure;
+		RCC_APB2PeriphClockCmd( RCC_APB2Periph_GPIOC | RCC_APB2Periph_GPIOC , ENABLE);
+		GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;
+		/*设置引脚模式为通用推挽输出*/
+		GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+		/*设置引脚速率为50MHz */
+		GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+		/*调用库函数，初始化GPIO*/
+		GPIO_Init(GPIOC, &GPIO_InitStructure);
+		/*选择要控制的GPIO引脚*/
+		GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3;
+		/*调用库函数，初始化GPIO*/
+		GPIO_Init(GPIOC, &GPIO_InitStructure);
+		/* 关闭所有led灯	*/
+		GPIO_SetBits(GPIOC, GPIO_Pin_2);
+		/* 关闭所有led灯	*/
+		GPIO_SetBits(GPIOC, GPIO_Pin_3);
 
+ }
 
-static void                         LED_GPIO_Config                  ( void );
+ void LED_Toggle(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin){
+			OS_ERR      err;
+	 		GPIO_ResetBits(GPIOx, GPIO_Pin);
+			OSTimeDly ( 1000, OS_OPT_TIME_DLY, & err );
+			GPIO_SetBits(GPIOx, GPIO_Pin);
+ }
 
-
-
- /**
-  * @brief  配置 LED 的 GPIO 功能
-  * @param  无
-  * @retval 无
-  */
-static void LED_GPIO_Config ( void )
-{		
-	/*定义一个GPIO_InitTypeDef类型的结构体*/
-	GPIO_InitTypeDef GPIO_InitStructure;
-
-
-	/* 配置 LED1 引脚 */
-	RCC_APB2PeriphClockCmd ( macLED1_GPIO_CLK, ENABLE ); 															   
-	GPIO_InitStructure.GPIO_Pin = macLED1_GPIO_PIN;	
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;   
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; 
-	GPIO_Init ( macLED1_GPIO_PORT, & GPIO_InitStructure );	
-
-	/* 配置 LED2 引脚 */
-	RCC_APB2PeriphClockCmd ( macLED2_GPIO_CLK, ENABLE ); 															   
-	GPIO_InitStructure.GPIO_Pin = macLED2_GPIO_PIN;	
-	GPIO_Init ( macLED2_GPIO_PORT, & GPIO_InitStructure );	
-
-
-	  		
-}
-
-
- /**
-  * @brief  LED 初始化函数
-  * @param  无
-  * @retval 无
-  */
-void LED_Init ( void )
-{
-  LED_GPIO_Config ();
-	
-	macLED1_OFF();
-	macLED2_OFF();
-	
-}
-
-
-
-/*********************************************END OF FILE**********************/
+ 
