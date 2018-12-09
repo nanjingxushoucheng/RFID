@@ -36,6 +36,8 @@
 
 #define  BSP_MODULE
 #include <bsp.h>
+#include "./exti/bsp_exti.h"
+#include "./led/bsp_led.h"
 
 
 /*
@@ -160,6 +162,9 @@ CPU_INT32U  BSP_CPU_ClkFreq_MHz;
 
 void  BSP_Init (void)
 {
+		EXTI_Pxy_Config();  //初始化按键
+		LED_GPIO_Config();
+		USARTx_Config ();   //初始化 USART1
 }
 
 
