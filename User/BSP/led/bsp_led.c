@@ -1,7 +1,7 @@
 #include <includes.h>
 #include "bsp_led.h"
 
- void LED_Config(void)
+ void LED_GPIO_Config(void)
  {
 	 	GPIO_InitTypeDef GPIO_InitStructure;
 		RCC_APB2PeriphClockCmd( RCC_APB2Periph_GPIOC | RCC_APB2Periph_GPIOC , ENABLE);
@@ -30,4 +30,4 @@
 			GPIO_SetBits(GPIOx, GPIO_Pin);
  }
 
- 
+/*********************************************END OF FILE**********************/

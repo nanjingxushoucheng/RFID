@@ -197,6 +197,10 @@ OS_CPU_SysTickHandler PROC                                        ;// Modified b
                 EXPORT  OS_CPU_SysTickHandler            [WEAK]   ;// Modified by fire （原是 SysTick Handler）
                 B       .
                 ENDP
+USART1_IRQHandler PROC                                        ;// Modified by fire （原是 SysTick Handler）
+                EXPORT  USART1_IRQHandler            [WEAK]   ;// Modified by fire （原是 SysTick Handler）
+                B       .
+                ENDP
 
 Default_Handler PROC
 
@@ -298,7 +302,6 @@ I2C2_EV_IRQHandler
 I2C2_ER_IRQHandler
 SPI1_IRQHandler
 SPI2_IRQHandler
-USART1_IRQHandler
 USART2_IRQHandler
 USART3_IRQHandler
 EXTI15_10_IRQHandler

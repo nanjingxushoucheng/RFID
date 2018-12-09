@@ -663,6 +663,16 @@
               <FileType>1</FileType>
               <FilePath>..\..\User\BSP\led\bsp_led.c</FilePath>
             </File>
+            <File>
+              <FileName>bsp_usart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\BSP\usart\bsp_usart.c</FilePath>
+            </File>
+            <File>
+              <FileName>bsp_exti.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\User\BSP\exti\bsp_exti.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

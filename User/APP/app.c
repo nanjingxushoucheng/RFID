@@ -36,8 +36,10 @@
 */
 
 #include <includes.h>
+#include <string.h>
 #include "stm32f10x.h"
 #include "./usart/bsp_usart.h"
+#include "./exti/bsp_exti.h"
 
 
 
@@ -46,6 +48,9 @@
 *                                            LOCAL DEFINES
 *********************************************************************************************************
 */
+OS_MEM  mem;                    //声明内存管理对象
+uint8_t ucArray [ 70 ] [ 5 ];   //声明内存分区大小
+
 
 /*
 *********************************************************************************************************
@@ -55,9 +60,9 @@
 
 static  OS_TCB   AppTaskStartTCB;
 
-static  OS_TCB   AppTaskAtParserTCB;
-static  OS_TCB   AppTaskAtProcessTCB;
-static  OS_TCB   AppTaskLogTCB;
+OS_TCB   AppTaskAtParserTCB;
+OS_TCB   AppTaskAtProcessTCB;
+OS_TCB   AppTaskLogTCB;
 
 
 
@@ -169,6 +174,20 @@ static  void  AppTaskStart (void *p_arg)
 
     CPU_IntDisMeasMaxCurReset();
 
+    /* 配置时间片轮转调度 */
+    OSSchedRoundRobinCfg((CPU_BOOLEAN   )DEF_ENABLED,          //使能时间片轮转调度
+		                     (OS_TICK       )0,                    //把 OSCfg_TickRate_Hz / 10 设为默认时间片值
+												 (OS_ERR       *)&err );               //返回错误类型
+
+
+		/* 创建内存管理对象 mem */
+		OSMemCreate ((OS_MEM      *)&mem,             //指向内存管理对象
+								 (CPU_CHAR    *)"Mem For Test",   //命名内存管理对象
+								 (void        *)ucArray,          //内存分区的首地址
+								 (OS_MEM_QTY   )70,               //内存分区中内存块数目
+								 (OS_MEM_SIZE  )5,                //内存块的字节数目
+								 (OS_ERR      *)&err);            //返回错误类型
+
 
     OSTaskCreate((OS_TCB     *)&AppTaskAtParserTCB,                /* Create the At Parser task                                */
                  (CPU_CHAR   *)"App Task At Parser",
@@ -227,15 +246,34 @@ static  void  AppTaskStart (void *p_arg)
 
 static  void  AppTaskAtParser ( void * p_arg )
 {
-    int i = 0;
-    char ch;
-    OS_ERR      err;
-    USART_Config();
+	OS_ERR      err;
+	OS_MSG_SIZE    msg_size;
+	CPU_SR_ALLOC();
+	
+	char * pMsg;
+	(void)p_arg;
+	
+	while (DEF_TRUE) {
+															//任务体
+		/* 阻塞任务，等待任务消息 */
+		pMsg = OSTaskQPend ((OS_TICK        )0,                    //无期限等待
+												(OS_OPT         )OS_OPT_PEND_BLOCKING, //没有消息就阻塞任务
+												(OS_MSG_SIZE   *)&msg_size,            //返回消息长度
+												(CPU_TS        *)0,                    //返回消息被发布的时间戳
+												(OS_ERR        *)&err);                //返回错误类型
 
-    while(1){
-        ch=getchar();
-        printf("%c",ch);
-    }
+//		OS_CRITICAL_ENTER();                                       //进入临界段，避免串口打印被打断
+		printf ( "%c", * pMsg );                                   //打印消息内容
+
+//		OS_CRITICAL_EXIT();                                        //退出临界段
+
+		/* 退还内存块 */
+		OSMemPut ((OS_MEM  *)&mem,                                 //指向内存管理对象
+							(void    *)pMsg,                                 //内存块的首地址
+							(OS_ERR  *)&err);		                             //返回错误类型
+	}
+
+
 }
 
 
@@ -247,7 +285,7 @@ static  void  AppTaskAtParser ( void * p_arg )
 
 static  void  AppTaskAtProcess ( void * p_arg )
 {
-	OS_ERR      err;
+		OS_ERR      err;
     if(0){
 
 
@@ -259,9 +297,9 @@ static  void  AppTaskAtProcess ( void * p_arg )
     }
         }
     while(1)
-        {
+    {
         OSTimeDly ( 1000, OS_OPT_TIME_DLY, & err );
-}
+    }
 }
 
 
@@ -272,14 +310,11 @@ static  void  AppTaskAtProcess ( void * p_arg )
 */
 static  void  AppTaskLog  ( void * p_arg )
 {
-		OS_ERR      err;
 		(void)p_arg;
-		LED_Config();
+		LED_GPIO_Config();
 
 		while(DEF_TRUE){
 			LED_Toggle(GPIOC,GPIO_Pin_2);
 			LED_Toggle(GPIOC,GPIO_Pin_3);
 		}
-
-
 }

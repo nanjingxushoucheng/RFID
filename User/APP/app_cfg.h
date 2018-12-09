@@ -65,7 +65,6 @@
 
 #define  APP_TASK_AT_PARSER_STK_SIZE                512
 #define  APP_TASK_AT_PROCESS_STK_SIZE               512
-#define  APP_TASK_LED3_STK_SIZE                     512
 #define  APP_TASK_LOG_SIZE                          512
 
 
