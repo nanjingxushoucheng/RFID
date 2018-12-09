@@ -3,7 +3,7 @@
 
  void LED_Config(void)
  {
-	 		GPIO_InitTypeDef GPIO_InitStructure;
+	 	GPIO_InitTypeDef GPIO_InitStructure;
 		RCC_APB2PeriphClockCmd( RCC_APB2Periph_GPIOC | RCC_APB2Periph_GPIOC , ENABLE);
 		GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2;
 		/*设置引脚模式为通用推挽输出*/
